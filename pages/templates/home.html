@@ -57,15 +57,17 @@
     const play_audio = (base64_source) => {
         if (base64_source) {
             text_on_playing = text_ready_to_convert
-            render(text_on_playing)
-            media = new Audio("data:audio/wav;base64," + base64_source)
-            media.onended = () => {
-                media_base64 = null
-                media = null
-                next_block_lock = false
-                render_texts.shift()
+            if (text_on_playing) {
+                render(text_on_playing)
+                media = new Audio("data:audio/wav;base64," + base64_source)
+                media.onended = () => {
+                    media_base64 = null
+                    media = null
+                    next_block_lock = false
+                    render_texts.shift()
+                }
+                media.play()
             }
-            media.play()
         }
     }
 
