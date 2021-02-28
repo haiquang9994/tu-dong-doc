@@ -61,7 +61,6 @@
                 render(text_on_playing)
                 media = new Audio("data:audio/wav;base64," + base64_source)
                 media.onended = () => {
-                    media_base64 = null
                     media = null
                     next_block_lock = false
                     render_texts.shift()
