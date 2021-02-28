@@ -9,6 +9,7 @@ from gtts import gTTS
 import re
 import base64
 import hashlib
+from pydub import AudioSegment
 
 class HttpResponseMethodNotAllowed(HttpResponse):
     status_code = HTTPStatus.METHOD_NOT_ALLOWED
@@ -48,6 +49,9 @@ def textToSpeech(request):
         output = gTTS(final_text, lang="vi", slow=False)
         filename = 'mp3/' + md5(text) + '.mp3'
         output.save(filename)
+        sound = AudioSegment.from_mp3(filename)
+        faster_sound = sound._spawn(sound.raw_data, overrides={"frame_rate": int(sound.frame_rate * 1.2)})
+        faster_sound.export(filename, format="mp3")
         response_data = {}
         response_data['text'] = final_text
         response_data['base64'] = str(GlobalToBase64(filename))
