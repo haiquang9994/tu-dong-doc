@@ -1,0 +1,137 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Tự động đọc</h1>
+<div>
+    <p style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px; font-size: 12px;">Chọn file upload.txt chứ nội dung tiếng Việt muốn nghe</p>
+    <input type="file" id="text_file">
+</div>
+<div style="padding: 10px 0;">
+    <button id="stop">Stop</button>
+</div>
+
+<div id="output"></div>
+
+<script>
+    var texts = []
+    var render_texts = []
+    var text_ready_to_convert = undefined
+    var text_on_playing = undefined
+    var convert_lock = false
+    var media = null
+    var media_base64 = null
+    var next_block_lock = false
+
+    document.getElementById('text_file').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            let file = e.target.files[0]
+            e.target.value = ''
+            readTextFile(file)
+                .then(content => {
+                    let blocks = content.split("\n").filter((b) => typeof b == 'string' && b.trim())
+                    let n = 0
+                    blocks.forEach((block, i) => {
+                        texts.push(block)
+                        render_texts.push(block)
+                    })
+                })
+        }
+    })
+
+    document.getElementById('stop').addEventListener('click', (e) => {
+        media.pause()
+
+        texts = []
+        render_texts = []
+        text_ready_to_convert = undefined
+        text_on_playing = undefined
+        convert_lock = false
+        media = null
+        media_base64 = null
+        next_block_lock = false
+
+        render()
+    })
+
+    const play_audio = (base64_audio) => {
+        if (base64_audio) {
+            text_on_playing = text_ready_to_convert
+            render(text_on_playing)
+            media = new Audio("data:audio/wav;base64," + base64_audio)
+            media.onended = () => {
+                media = null
+                next_block_lock = false
+                render_texts.shift()
+            }
+            media.play()
+        }
+    }
+
+    const render = (text) => {
+        document.getElementById('output').innerHTML = '<p>' + text + '</p>'
+    }
+
+    setInterval(() => {
+        if (text_ready_to_convert === undefined) {
+            text_ready_to_convert = texts.shift()
+            if (text_ready_to_convert) {
+                convert_lock = false
+            }
+        }
+        if (!convert_lock) {
+            if (text_ready_to_convert) {
+                convert_lock = true
+                sendHttp('POST', '/text-to-speech', {
+                    'Content-Type': 'application/json'
+                }, { text: text_ready_to_convert })
+                    .then(res => {
+                        media_base64 = res.body.base64
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }
+        }
+        if (media) {
+            if (media.currentTime > media.duration - 5 && !next_block_lock) {
+                text_ready_to_convert = undefined
+                next_block_lock = true
+            }
+        } else {
+            play_audio(media_base64)
+        }
+    }, 100)
+
+    const readTextFile = (file) => {
+        return new Promise((resolve, reject) => {
+            let fr = new FileReader()
+            fr.onload = () => {
+                resolve(fr.result)
+            }
+            fr.readAsText(file)
+        })
+    }
+
+    const sendHttp = (method, url, headers, body) => {
+        return new Promise((resolve, reject) => {
+            method = method || 'GET'
+            let xhttp = new XMLHttpRequest()
+            let isJson = false
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    let data = xhttp.getResponseHeader('Content-Type').search('application/json') !== -1 ? JSON.parse(xhttp.responseText) : xhttp.responseText
+                    resolve({ code: 200, body: data })
+                }
+            }
+            xhttp.open(method, url, true)
+            if (headers instanceof Object) {
+                for (let name in headers) {
+                    xhttp.setRequestHeader(name, headers[name])
+                }
+            }
+            xhttp.send(body ? JSON.stringify(body) : undefined)
+        })
+    }
+</script>
+{% endblock content %}
