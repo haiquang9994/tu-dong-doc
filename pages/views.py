@@ -20,7 +20,7 @@ def homePageView(request):
         "last_name": "Batta",
         "address": "Hyderabad, India"
     }
-    template_name = "home.html"
+    template_name = "home2.html"
     return render(request, template_name, context)
 
 def aboutPageView(request):

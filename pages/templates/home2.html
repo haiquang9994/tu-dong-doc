@@ -1,0 +1,176 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Tự động đọc</h1>
+<div>
+    <p style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px; font-size: 12px;">Chọn file upload.txt chứ nội dung
+        tiếng Việt muốn nghe</p>
+    <input type="file" id="text_file">
+</div>
+<div style="padding: 10px 0;">
+    <button id="stop">Stop</button>
+    <button id="pause">Pause</button>
+    <button id="play">Play</button>
+</div>
+
+<div id="output"></div>
+
+<script>
+    const RunAudio = function (params) {
+        this.text_values = []
+        this.base64_values = []
+        this.media = null
+        this.loading = false
+        this.outputEl = null
+        this.output_texts = []
+
+        this.run = () => {
+            if (params) {
+                if (params.stopEl) {
+                    this.add_event_stop(params.stopEl)
+                }
+                if (params.pauseEl) {
+                    this.add_event_pause(params.pauseEl)
+                }
+                if (params.playEl) {
+                    this.add_event_play(params.playEl)
+                }
+                if (params.outputEl) {
+                    this.outputEl = params.outputEl
+                }
+            }
+            setInterval(() => {
+                if (this.base64_values.length < 2) {
+                    if (this.has() && !this.loading) {
+                        this.loading = true
+                        let text = this.shift()
+                        this.text_to_speech(text)
+                            .then(res => {
+                                this.base64_values.push(res)
+                                this.loading = false
+                                this.output_texts.push(res.text)
+                                this.output()
+                            })
+                    }
+                }
+                if (!this.media) {
+                    if (this.base64_values.length > 0) {
+                        let base64_value = this.base64_values.shift()
+                        this.output_texts = [base64_value.text]
+                        this.base64_values.forEach(value => {
+                            this.output_texts.push(value.text)
+                        })
+                        this.output()
+                        this.media = new Audio("data:audio/wav;base64," + base64_value.base64)
+                        this.media.onended = () => {
+                            this.media = null
+                        }
+                        this.media.play()
+                    }
+                }
+            }, 1000)
+        }
+        this.add = (text) => {
+            this.text_values.push(text)
+        }
+        this.shift = () => {
+            return this.text_values.shift()
+        }
+        this.has = () => {
+            return this.text_values.length > 0
+        }
+        this.text_to_speech = (text) => {
+            return sendHttp('POST', '/text-to-speech', {
+                'Content-Type': 'application/json'
+            }, {
+                text: text
+            })
+        }
+        this.output = () => {
+            if (this.outputEl) {
+                let texts = []
+                this.output_texts.forEach(text => {
+                    texts.push('<p>' + text + '</p>')
+                })
+                this.outputEl.innerHTML = texts.join('')
+            }
+        }
+        this.add_event_stop = (ele) => {
+            ele.addEventListener('click', () => {
+                if (this.media) {
+                    this.media.pause()
+                }
+            })
+        }
+        this.add_event_pause = (ele) => {
+            ele.addEventListener('click', () => {
+                if (this.media) {
+                    this.media.pause()
+                }
+            })
+        }
+        this.add_event_play = (ele) => {
+            ele.addEventListener('click', () => {
+                if (this.media) {
+                    this.media.play()
+                }
+            })
+        }
+    }
+
+    var runAudio = new RunAudio({
+        stopEl: document.getElementById('stop'),
+        playEl: document.getElementById('play'),
+        pauseEl: document.getElementById('pause'),
+        outputEl: document.getElementById('output'),
+    })
+
+    runAudio.run()
+
+    document.getElementById('text_file').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            let file = e.target.files[0]
+            e.target.value = ''
+            readTextFile(file)
+                .then(content => {
+                    let blocks = content.split("\n").filter((b) => typeof b == 'string' && b.trim())
+                    blocks.forEach((block, i) => {
+                        runAudio.add(block)
+                    })
+                })
+        }
+    })
+
+    const readTextFile = (file) => {
+        return new Promise((resolve, reject) => {
+            let fr = new FileReader()
+            fr.onload = () => {
+                resolve(fr.result)
+            }
+            fr.readAsText(file)
+        })
+    }
+
+    const sendHttp = (method, url, headers, body) => {
+        return new Promise((resolve, reject) => {
+            method = method || 'GET'
+            let xhttp = new XMLHttpRequest()
+            let isJson = false
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    let data = xhttp.getResponseHeader('Content-Type').search('application/json') !== -1 ? JSON.parse(xhttp.responseText) : xhttp.responseText
+                    resolve(data)
+                }
+            }
+            xhttp.open(method, url, true)
+            if (headers instanceof Object) {
+                for (let name in headers) {
+                    xhttp.setRequestHeader(name, headers[name])
+                }
+            }
+            xhttp.send(body ? JSON.stringify(body) : undefined)
+        })
+    }
+</script>
+{% endblock content %}

@@ -18,6 +18,7 @@
     var render_texts = []
     var text_ready_to_convert = undefined
     var text_on_playing = undefined
+    var text_last_play = undefined
     var convert_lock = false
     var media = null
     var media_base64 = null
@@ -46,6 +47,7 @@
         render_texts = []
         text_ready_to_convert = undefined
         text_on_playing = undefined
+        text_last_play = undefined
         convert_lock = false
         media = null
         media_base64 = null
@@ -61,6 +63,7 @@
                 render(text_on_playing)
                 media = new Audio("data:audio/wav;base64," + base64_source)
                 media.onended = () => {
+                    text_last_play = text_on_playing
                     media = null
                     next_block_lock = false
                     render_texts.shift()
@@ -82,7 +85,7 @@
             }
         }
         if (!convert_lock) {
-            if (text_ready_to_convert) {
+            if (text_ready_to_convert && (text_last_play === undefined || text_last_play != text_on_playing)) {
                 convert_lock = true
                 sendHttp('POST', '/text-to-speech', {
                     'Content-Type': 'application/json'
@@ -96,7 +99,7 @@
             }
         }
         if (media) {
-            if (media.currentTime > media.duration - 5 && !next_block_lock) {
+            if (media.currentTime > media.duration - 10 && !next_block_lock) {
                 text_ready_to_convert = undefined
                 next_block_lock = true
             }
