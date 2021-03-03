@@ -6,7 +6,7 @@
 <div>
     <p style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px; font-size: 12px;">Chọn file upload.txt chứ nội dung
         tiếng Việt muốn nghe</p>
-    <input type="file" id="text_file">
+    <input type="file" id="text_file" multiple>
 </div>
 <div style="padding: 10px 0;">
     <button id="stop">Stop</button>
@@ -128,18 +128,24 @@
 
     runAudio.run()
 
-    document.getElementById('text_file').addEventListener('change', (e) => {
-        if (e.target.files && e.target.files[0]) {
-            let file = e.target.files[0]
-            e.target.value = ''
-            readTextFile(file)
-                .then(content => {
-                    let blocks = content.split("\n").filter((b) => typeof b == 'string' && b.trim())
-                    blocks.forEach((block, i) => {
-                        runAudio.add(block)
-                    })
+    const runAddFiles = (files) => {
+        let file = files.shift()
+        readTextFile(file)
+            .then(content => {
+                let blocks = content.split("\n").filter((b) => typeof b == 'string' && b.trim())
+                blocks.forEach((block, i) => {
+                    runAudio.add(block)
                 })
-        }
+                if (files.length > 0) {
+                    runAddFiles(files)
+                }
+            })
+    }
+
+    document.getElementById('text_file').addEventListener('change', (e) => {
+        let files = [...e.target.files]
+        e.target.value = ''
+        runAddFiles(files)
     })
 
     const readTextFile = (file) => {
