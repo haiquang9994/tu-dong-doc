@@ -50,13 +50,16 @@
             setInterval(() => {
                 if (this.base64_items.length < 3) {
                     if (this.has() && !this.loading) {
-                        this.loading = true
-                        this.text_to_speech(this.shift_queue())
-                            .then(res => {
-                                this.base64_items.push(res)
-                                this.loading = false
-                                this.render_base64_items()
-                            })
+                        let text = this.shift_queue()
+                        if (text?.match(/[a-zA-Z0-9]+/)) {
+                            this.loading = true
+                            this.text_to_speech(text)
+                                .then(res => {
+                                    this.base64_items.push(res)
+                                    this.loading = false
+                                    this.render_base64_items()
+                                })
+                        }
                     }
                 }
                 if (!this.media) {
