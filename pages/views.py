@@ -58,6 +58,7 @@ def textToSpeech(request):
         response_data = {}
         response_data['text'] = final_text
         response_data['base64'] = str(GlobalToBase64(filename))
+        response_data['name'] = md5(text)
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseMethodNotAllowed()
