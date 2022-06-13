@@ -44,9 +44,11 @@ def textToSpeech(request):
         text = data['text']
         text = re.sub(r'\.', '. ', text)
         text = re.sub(r'\.\ \ ', '. ', text)
-        text = re.sub(r'\.\ +\"', '."', text)
+        text = re.sub(r'\.\ +\"', '. "', text)
+        text = re.sub(r'\ \, ', ', ', text)
+        audio_text = re.sub(r'\"', '', text)
         rows = [r for r in re.compile(
-            "\.(\ )|\-").split(text.strip()) if (r != '' and r != None and r.strip() != "")]
+            "\.(\ )|\-").split(audio_text.strip()) if (r != '' and r != None and r.strip() != "")]
         final_text = '. '.join(rows).strip()
         output = gTTS(final_text, lang="vi", slow=False)
         filename = 'mp3/' + md5(text) + '.mp3'
