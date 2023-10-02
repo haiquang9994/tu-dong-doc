@@ -39,65 +39,68 @@
                 //     this.add_event_stop(params.stopEl)
                 // }
                 if (params.playPauseEl) {
-                    this.add_event_play_pause(params.playPauseEl)
+                    this.add_event_play_pause(params.playPauseEl);
                 }
                 if (params.nextEl) {
-                    this.add_event_next(params.nextEl)
+                    this.add_event_next(params.nextEl);
                 }
                 if (params.outputEl) {
-                    this.outputEl = params.outputEl
+                    this.outputEl = params.outputEl;
                 }
                 if (params.queueEl) {
-                    this.queueEl = params.queueEl
+                    this.queueEl = params.queueEl;
                 }
             }
+            this.load_base64_items();
             this.load_queue_texts();
             setInterval(() => {
                 if (this.base64_items.length < 3) {
                     if (this.has() && !this.loading) {
-                        let text = this.shift_queue()
+                        let text = this.shift_queue();
                         if (text?.match(/[a-zA-Z0-9]+/)) {
                             this.loading = true
                             this.text_to_speech(text)
                                 .then(res => {
-                                    this.base64_items.push(res)
-                                    this.loading = false
-                                    this.render_base64_items()
+                                    this.base64_items.push(res);
+                                    this.loading = false;
+                                    this.render_base64_items();
+                                    this.save_base64_items();
                                 })
                         }
                     }
                 }
                 if (!this.media) {
                     if (this.base64_items.length > 0) {
-                        let base64_item = this.base64_items[0]
-                        this.media = new Audio("data:audio/wav;base64," + base64_item.base64)
+                        let base64_item = this.base64_items[0];
+                        this.media = new Audio("data:audio/wav;base64," + base64_item.base64);
                         this.media.onended = () => {
                             this.base64_items.shift();
-                            this.render_base64_items()
-                            this.media = null
+                            this.render_base64_items();
+                            this.save_base64_items();
+                            this.media = null;
                         }
-                        this.media.play()
+                        this.media.play();
                     }
                 }
             }, 500)
         }
         this.render_queue = () => {
             if (this.queueEl) {
-                let queues = this.queue_texts
-                let texts = []
+                let queues = this.queue_texts;
+                let texts = [];
                 queues.forEach(text => {
-                    texts.push('<p>' + text + '</p>')
+                    texts.push('<p>' + text + '</p>');
                 })
-                this.queueEl.innerHTML = texts.join('')
+                this.queueEl.innerHTML = texts.join('');
             }
         }
         this.add = (text) => {
-            this.queue_texts.push(text)
+            this.queue_texts.push(text);
             this.render_queue();
             this.save_queue_texts();
         }
         this.shift_queue = () => {
-            let text = this.queue_texts.shift()
+            let text = this.queue_texts.shift();
             this.render_queue();
             this.save_queue_texts();
             return text;
@@ -115,6 +118,19 @@
                 console.error(e);
             }
         }
+        this.save_base64_items = () => {
+            window.localStorage.setItem('__base64_items__', JSON.stringify(this.base64_items));
+        }
+        this.load_base64_items = () => {
+            try {
+                const base64_items = JSON.parse(window.localStorage.getItem('__base64_items__'));
+                if (Array.isArray(base64_items)) {
+                    this.base64_items = base64_items;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
         this.has = () => {
             return this.queue_texts.length > 0
         }
@@ -127,9 +143,9 @@
         }
         this.render_base64_items = () => {
             if (this.outputEl) {
-                let texts = []
+                let texts = [];
                 this.base64_items.forEach(({ text }) => {
-                    texts.push('<p>' + text + '</p>')
+                    texts.push('<p>' + text + '</p>');
                 })
                 this.outputEl.innerHTML = texts.join('')
             }
@@ -137,7 +153,7 @@
         this.add_event_stop = (ele) => {
             ele.addEventListener('click', () => {
                 if (this.media) {
-                    this.media.pause()
+                    this.media.pause();
                 }
             })
         }
@@ -145,9 +161,9 @@
             ele.addEventListener('click', () => {
                 if (this.media) {
                     if (this.media.paused) {
-                        this.media.play()
+                        this.media.play();
                     } else {
-                        this.media.pause()
+                        this.media.pause();
                     }
                 }
             })
@@ -157,7 +173,7 @@
                 if (this.media) {
                     this.media.currentTime = this.media.duration;
                     if (this.media.paused) {
-                        this.media.play()
+                        this.media.play();
                     }
                 }
             })
