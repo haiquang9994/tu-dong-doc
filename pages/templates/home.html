@@ -51,6 +51,7 @@
                     this.queueEl = params.queueEl
                 }
             }
+            this.load_queue_texts();
             setInterval(() => {
                 if (this.base64_items.length < 3) {
                     if (this.has() && !this.loading) {
@@ -93,11 +94,26 @@
         this.add = (text) => {
             this.queue_texts.push(text)
             this.render_queue();
+            this.save_queue_texts();
         }
         this.shift_queue = () => {
             let text = this.queue_texts.shift()
             this.render_queue();
+            this.save_queue_texts();
             return text;
+        }
+        this.save_queue_texts = () => {
+            window.localStorage.setItem('__queue_texts__', JSON.stringify(this.queue_texts));
+        }
+        this.load_queue_texts = () => {
+            try {
+                const queue_texts = JSON.parse(window.localStorage.getItem('__queue_texts__'));
+                if (Array.isArray(queue_texts)) {
+                    this.queue_texts = queue_texts;
+                }
+            } catch (e) {
+                console.error(e);
+            }
         }
         this.has = () => {
             return this.queue_texts.length > 0
