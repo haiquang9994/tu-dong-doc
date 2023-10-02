@@ -26,12 +26,12 @@
 
 <script>
     const RunAudio = function (params) {
-        this.queue_texts = []
-        this.base64_items = []
-        this.media = null
-        this.loading = false
-        this.outputEl = null
-        this.queueEl = null
+        this.queue_texts = [];
+        this.base64_items = [];
+        this.media = null;
+        this.loading = false;
+        this.outputEl = null;
+        this.queueEl = null;
 
         this.run = () => {
             if (params) {
@@ -58,7 +58,8 @@
                     if (this.has() && !this.loading) {
                         let text = this.shift_queue();
                         if (text?.match(/[a-zA-Z0-9]+/)) {
-                            this.loading = true
+                            this.save_queue_texts(text);
+                            this.loading = true;
                             this.text_to_speech(text)
                                 .then(res => {
                                     this.base64_items.push(res);
@@ -105,8 +106,9 @@
             this.save_queue_texts();
             return text;
         }
-        this.save_queue_texts = () => {
-            window.localStorage.setItem('__queue_texts__', JSON.stringify(this.queue_texts));
+        this.save_queue_texts = (text) => {
+            const queue_texts = (text ? [text] : []).concat(this.queue_texts);
+            window.localStorage.setItem('__queue_texts__', JSON.stringify(queue_texts));
         }
         this.load_queue_texts = () => {
             try {
