@@ -8,8 +8,11 @@
         tiếng Việt muốn nghe</p>
     <input type="file" id="text_file" multiple style="user-select: none;">
     <div style="margin-top: 10px">
-        <textarea style="width: 100%; padding: 5px; outline: none; max-width: 100%;" rows="6" id="text_textarea"></textarea>
-        <button id="text_textarea_btn" disabled style="user-select: none;">OK</button>
+        <textarea style="width: 100%; padding: 5px; outline: none; max-width: 100%;margin-bottom: 5px;" rows="6" id="text_textarea"></textarea>
+        <div style="display: flex;gap: 10px;">
+            <button id="text_textarea_btn" disabled style="user-select: none;flex: 1;">OK</button>
+            <button id="remove_all" style="user-select: none;flex: 1;">Remove All</button>
+        </div>
     </div>
 </div>
 <div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;">
@@ -43,6 +46,9 @@
                 }
                 if (params.nextEl) {
                     this.add_event_next(params.nextEl);
+                }
+                if (params.removeAllEl) {
+                    this.add_event_remove_all(params.removeAllEl);
                 }
                 if (params.outputEl) {
                     this.outputEl = params.outputEl;
@@ -185,12 +191,27 @@
                 }
             })
         }
+        this.add_event_remove_all = (ele) => {
+            ele.addEventListener('click', () => {
+                if (this.media) {
+                    if (!this.media.paused) {
+                        this.media.pause();
+                    }
+                    this.media = null;
+                }
+                this.queue_texts = [];
+                this.base64_items = [];
+                this.save_base64_items();
+                this.save_queue_texts();
+            })
+        }
     }
 
     var runAudio = new RunAudio({
         stopEl: document.getElementById('stop'),
         playPauseEl: document.getElementById('playPause'),
         nextEl: document.getElementById('next'),
+        removeAllEl: document.getElementById('remove_all'),
         outputEl: document.getElementById('output'),
         queueEl: document.getElementById('queue'),
     })
