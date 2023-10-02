@@ -6,13 +6,13 @@
 <div>
     <p style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px; font-size: 12px;user-select: none;">Chọn file upload.txt chứ nội dung
         tiếng Việt muốn nghe</p>
-    <input type="file" id="text_file" multiple>
+    <input type="file" id="text_file" multiple style="user-select: none;">
     <div style="margin-top: 10px">
         <textarea style="width: 100%; padding: 5px; outline: none;" rows="5" id="text_textarea"></textarea>
         <button id="text_textarea_btn" disabled style="user-select: none;">OK</button>
     </div>
 </div>
-<div style="padding: 10px 0;display: flex; gap: 10px;">
+<div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;">
     <!-- <button id="stop">Stop</button> -->
     <button style="flex: 1" id="playPause" data-play="Play" data-pause="Pause">Play</button>
     <button style="flex: 1" id="next">Next</button>
