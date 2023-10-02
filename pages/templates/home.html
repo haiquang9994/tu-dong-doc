@@ -88,6 +88,9 @@
                             this.media = null;
                         }
                         this.media.play();
+                        if (params.playPauseEl) {
+                            params.playPauseEl.innerText = params.playPauseEl.dataset.pause;
+                        }
                     }
                 }
             }, 500)
