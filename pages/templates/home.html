@@ -13,8 +13,9 @@
     </div>
 </div>
 <div style="padding: 10px 0;">
-    <button id="stop">Stop</button>
+    <!-- <button id="stop">Stop</button> -->
     <button id="playPause">Play/Pause</button>
+    <button id="next">Next</button>
 </div>
 
 <h3>Ready to read</h3>
@@ -34,11 +35,14 @@
 
         this.run = () => {
             if (params) {
-                if (params.stopEl) {
-                    this.add_event_stop(params.stopEl)
-                }
+                // if (params.stopEl) {
+                //     this.add_event_stop(params.stopEl)
+                // }
                 if (params.playPauseEl) {
                     this.add_event_play_pause(params.playPauseEl)
+                }
+                if (params.nextEl) {
+                    this.add_event_next(params.nextEl)
                 }
                 if (params.outputEl) {
                     this.outputEl = params.outputEl
@@ -132,11 +136,22 @@
                 }
             })
         }
+        this.add_event_next = (ele) => {
+            ele.addEventListener('click', () => {
+                if (this.media) {
+                    this.media.currentTime = this.media.duration;
+                    if (this.media.paused) {
+                        this.media.play()
+                    }
+                }
+            })
+        }
     }
 
     var runAudio = new RunAudio({
         stopEl: document.getElementById('stop'),
         playPauseEl: document.getElementById('playPause'),
+        nextEl: document.getElementById('next'),
         outputEl: document.getElementById('output'),
         queueEl: document.getElementById('queue'),
     })
