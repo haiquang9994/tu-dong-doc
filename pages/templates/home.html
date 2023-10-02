@@ -113,6 +113,7 @@
                 const queue_texts = JSON.parse(window.localStorage.getItem('__queue_texts__'));
                 if (Array.isArray(queue_texts)) {
                     this.queue_texts = queue_texts;
+                    this.render_queue();
                 }
             } catch (e) {
                 console.error(e);
@@ -126,6 +127,7 @@
                 const base64_items = JSON.parse(window.localStorage.getItem('__base64_items__'));
                 if (Array.isArray(base64_items)) {
                     this.base64_items = base64_items;
+                    this.render_base64_items();
                 }
             } catch (e) {
                 console.error(e);
