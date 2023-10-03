@@ -83,6 +83,12 @@
                     if (this.base64_items.length > 0) {
                         let base64_item = this.base64_items[0];
                         this.media = new Audio("data:audio/wav;base64," + base64_item.base64);
+                        this.media.onplay = () => {
+                            params.playPauseEl.innerText = params.playPauseEl.dataset.play;
+                        }
+                        this.media.onpause = () => {
+                            params.playPauseEl.innerText = params.playPauseEl.dataset.pause;
+                        }
                         this.media.onended = () => {
                             this.base64_items.shift();
                             this.render_base64_items();
