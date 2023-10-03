@@ -135,7 +135,8 @@
                 let queues = this.queue_texts;
                 let texts = [];
                 queues.forEach(text => {
-                    texts.push('<p>' + text + '</p>');
+                    const _text = typeof text === 'string' ? text.trim() : "";
+                    texts.push('<p>' + _text + '</p>');
                 })
                 this.queueEl.innerHTML = texts.join('');
             }
@@ -194,9 +195,10 @@
             if (this.outputEl) {
                 let texts = [];
                 this.base64_items.forEach(({ text }) => {
-                    texts.push('<p>' + text + '</p>');
+                    const _text = typeof text === 'string' ? text.trim() : "";
+                    texts.push('<p>' + _text + '</p>');
                 })
-                this.outputEl.innerHTML = texts.join('')
+                this.outputEl.innerHTML = texts.join('');
             }
         }
         this.add_event_stop = (ele) => {
