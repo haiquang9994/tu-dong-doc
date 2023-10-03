@@ -2,25 +2,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 style="user-select: none;-webkit-user-select:none;">Tự động đọc</h1>
+<h1 style="user-select: none;-webkit-user-select:none;text-align: center;margin: 10px 0;">Tự động đọc</h1>
 <div>
     <p style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px; font-size: 12px;user-select: none;-webkit-user-select:none;">Chọn file
         upload.txt chứ nội dung
         tiếng Việt muốn nghe</p>
     <input type="file" id="text_file" multiple style="user-select: none;-webkit-user-select:none;">
     <div style="margin-top: 10px;user-select: none;-webkit-user-select:none;">
-        <textarea style="width: 100%; padding: 5px; outline: none; max-width: 100%;margin-bottom: 5px;" rows="6"
+        <textarea style="width: 100%; padding: 5px; outline: none; max-width: 100%;margin-bottom: 5px;border-radius: 10px;" rows="6"
             id="text_textarea"></textarea>
         <div style="display: flex;gap: 10px;">
-            <button id="text_textarea_btn" disabled style="flex: 1;line-height: 32px;font-size: 22px;">✔</button>
-            <button id="remove_all" style="flex: 1;line-height: 32px;font-size: 22px;">✘</button>
+            <button id="text_textarea_btn" disabled style="flex: 1;line-height: 32px;font-size: 32;border-radius: 10px;border: 0;background-color: beige;color: brown;">✔</button>
+            <button id="remove_all" style="flex: 1;line-height: 32px;font-size: 24px;border-radius: 10px;border: 0;background-color: beige;color: brown;">✘</button>
         </div>
     </div>
 </div>
 <div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;-webkit-user-select:none;">
     <!-- <button id="stop">Stop</button> -->
-    <button style="flex: 1;line-height: 32px;font-size: 22px;" id="playPause" data-play="►" data-pause="⏸">►</button>
-    <button style="flex: 1;line-height: 32px;font-size: 22px;" id="next">⏭</button>
+    <button style="flex: 1;line-height: 32px;font-size: 22px;border-radius: 10px;border: 0;background-color: beige;color: brown;" id="playPause" data-play="►" data-pause="⏸">►</button>
+    <button style="flex: 1;line-height: 32px;font-size: 22px;border-radius: 10px;border: 0;background-color: beige;color: brown;" id="next">⏭</button>
 </div>
 
 <h3 style="user-select: none;-webkit-user-select:none;">Ready to read</h3>
