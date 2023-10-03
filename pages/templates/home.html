@@ -84,10 +84,10 @@
                         let base64_item = this.base64_items[0];
                         this.media = new Audio("data:audio/wav;base64," + base64_item.base64);
                         this.media.onplay = () => {
-                            params.playPauseEl.innerText = params.playPauseEl.dataset.play;
+                            params.playPauseEl.innerText = params.playPauseEl.dataset.pause;
                         }
                         this.media.onpause = () => {
-                            params.playPauseEl.innerText = params.playPauseEl.dataset.pause;
+                            params.playPauseEl.innerText = params.playPauseEl.dataset.play;
                         }
                         this.media.onended = () => {
                             this.base64_items.shift();
