@@ -16,16 +16,24 @@
             style="width: 100%; padding: 5px; outline: none; max-width: 100%;margin-bottom: 5px;border-radius: 10px;"
             rows="6" id="text_textarea"></textarea>
         <div style="display: flex;gap: 10px;">
-            <button class="btn" id="text_textarea_btn" disabled style="font-size: 32px;">✔</button>
-            <button class="btn" id="remove_all" style="font-size: 24px;">✘</button>
+            <button class="btn btn-enter" id="text_textarea_btn" disabled>
+                <img src="{% static 'check.png' %}" alt="Ok">
+            </button>
+            <button class="btn btn-remove" id="remove_all">
+                <img src="{% static 'remove.png' %}" alt="Remove all">
+            </button>
         </div>
     </div>
 </div>
-<img src="{% static '/play.png' %}" alt="Play">
 <div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;-webkit-user-select:none;">
     <!-- <button id="stop">Stop</button> -->
-    <button class="btn play" id="playPause"></button>
-    <button class="btn" id="next" style="font-size: 23px;">⏭</button>
+    <button class="btn play" id="playPause">
+        <img class="play-img" src="{% static 'play.png' %}" alt="Play">
+        <img class="pause-img" src="{% static 'pause.png' %}" alt="Pause">
+    </button>
+    <button class="btn btn-next" id="next">
+        <img src="{% static 'end.png' %}" alt="Next">
+    </button>
 </div>
 
 <h3 style="user-select: none;-webkit-user-select:none;">Ready to read</h3>
@@ -35,28 +43,20 @@
 <div id="queue" style="text-align: justify;"></div>
 
 <style>
-    .btn.play {
-        position: relative;
-        font-size: 24px;
+    .btn.play img.play-img {
+        display: block;
     }
 
-    .btn.play::before {
-        content: "➲";
-        position: absolute;
-        top: 4px;
-        transform: translateX(-50%);
+    .btn.play img.pause-img {
+        display: none;
     }
 
-    .btn.pause {
-        position: relative;
-        font-size: 30px;
+    .btn.pause img.pause-img {
+        display: block;
     }
 
-    .btn.pause::before {
-        content: "⏸";
-        position: absolute;
-        top: 2px;
-        transform: translateX(-50%);
+    .btn.pause img.play-img {
+        display: none;
     }
 </style>
 <script>
