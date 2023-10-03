@@ -95,11 +95,7 @@
                             this.save_base64_items();
                             this.media = null;
                         }
-                        this.media.play().then(() => {
-                            if (params.playPauseEl) {
-                                params.playPauseEl.innerText = params.playPauseEl.dataset.pause;
-                            }
-                        });
+                        this.media.play();
                     }
                 }
             }, 500)
@@ -184,11 +180,9 @@
             ele.addEventListener('click', () => {
                 if (this.media) {
                     if (this.media.paused) {
-                        ele.innerText = ele.dataset.pause;
                         this.media.play();
                     } else {
                         this.media.pause();
-                        ele.innerText = ele.dataset.play;
                     }
                 }
             })
