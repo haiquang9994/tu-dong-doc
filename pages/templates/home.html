@@ -2,31 +2,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 style="user-select: none;">Tự động đọc</h1>
+<h1 style="user-select: none;-webkit-user-select:none;">Tự động đọc</h1>
 <div>
-    <p style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px; font-size: 12px;user-select: none;">Chọn file
+    <p style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px; font-size: 12px;user-select: none;-webkit-user-select:none;">Chọn file
         upload.txt chứ nội dung
         tiếng Việt muốn nghe</p>
-    <input type="file" id="text_file" multiple style="user-select: none;">
+    <input type="file" id="text_file" multiple style="user-select: none;-webkit-user-select:none;">
     <div style="margin-top: 10px">
         <textarea style="width: 100%; padding: 5px; outline: none; max-width: 100%;margin-bottom: 5px;" rows="6"
             id="text_textarea"></textarea>
         <div style="display: flex;gap: 10px;">
-            <button id="text_textarea_btn" disabled style="user-select: none;flex: 1;">✔ OK</button>
-            <button id="remove_all" style="user-select: none;flex: 1;">🗑 Remove all</button>
+            <button id="text_textarea_btn" disabled style="user-select: none;-webkit-user-select:none;flex: 1;">✔ OK</button>
+            <button id="remove_all" style="user-select: none;-webkit-user-select:none;flex: 1;">🗑 Remove all</button>
         </div>
     </div>
 </div>
-<div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;">
+<div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;-webkit-user-select:none;">
     <!-- <button id="stop">Stop</button> -->
     <button style="flex: 1" id="playPause" data-play="► Play" data-pause="⏸ Pause">► Play</button>
     <button style="flex: 1" id="next">⏭ Next</button>
 </div>
 
-<h3 style="user-select: none;">Ready to read</h3>
+<h3 style="user-select: none;-webkit-user-select:none;">Ready to read</h3>
 <div id="output"></div>
 
-<h3 style="user-select: none;">Queues</h3>
+<h3 style="user-select: none;-webkit-user-select:none;">Queues</h3>
 <div id="queue"></div>
 
 <script>
