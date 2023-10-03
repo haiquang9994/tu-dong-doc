@@ -1,5 +1,6 @@
 <!-- templates/home.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h1 style="user-select: none;-webkit-user-select:none;text-align: center;margin: 10px 0;">Tự động đọc</h1>
@@ -20,6 +21,7 @@
         </div>
     </div>
 </div>
+<img src="{% static '/play.png' %}" alt="Play">
 <div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;-webkit-user-select:none;">
     <!-- <button id="stop">Stop</button> -->
     <button class="btn play" id="playPause"></button>
