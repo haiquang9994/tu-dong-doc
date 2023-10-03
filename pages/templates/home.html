@@ -22,7 +22,7 @@
 </div>
 <div style="padding: 10px 0;display: flex; gap: 10px;user-select: none;-webkit-user-select:none;">
     <!-- <button id="stop">Stop</button> -->
-    <button class="btn" id="playPause" data-play="►" data-pause="⏸">►</button>
+    <button class="btn play" id="playPause"></button>
     <button class="btn" id="next">⏭</button>
 </div>
 
@@ -32,6 +32,18 @@
 <h3 style="user-select: none;-webkit-user-select:none;">Queues</h3>
 <div id="queue"></div>
 
+<style>
+    .btn.play {
+        &::before {
+            content: "►";
+        }
+    }
+    .btn.pause {
+        &::before {
+            content: "⏸";
+        }
+    }
+</style>
 <script>
     const RunAudio = function (params) {
         this.queue_texts = [];
@@ -87,10 +99,12 @@
                         let base64_item = this.base64_items[0];
                         this.media = new Audio("data:audio/wav;base64," + base64_item.base64);
                         this.media.onplay = () => {
-                            params.playPauseEl.innerText = params.playPauseEl.dataset.pause;
+                            params.playPauseEl.classList.remove('play');
+                            params.playPauseEl.classList.add('pause');
                         }
                         this.media.onpause = () => {
-                            params.playPauseEl.innerText = params.playPauseEl.dataset.play;
+                            params.playPauseEl.classList.remove('pause');
+                            params.playPauseEl.classList.add('play');
                         }
                         this.media.onended = () => {
                             this.base64_items.shift();
