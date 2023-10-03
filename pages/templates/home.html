@@ -34,14 +34,21 @@
 
 <style>
     .btn.play {
-        &::before {
-            content: "►";
-        }
+        position: relative;
     }
+
+    .btn.play::before {
+        content: "►";
+        position: absolute;
+    }
+
     .btn.pause {
-        &::before {
-            content: "⏸";
-        }
+        position: relative;
+    }
+
+    .btn.pause::before {
+        content: "⏸";
+        position: absolute;
     }
 </style>
 <script>
