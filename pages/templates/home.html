@@ -218,7 +218,7 @@
                     }
                 }
             })
-            window.addEventListener('keyup', () => {
+            window.addEventListener('keyup', (e) => {
                 if (e.target.tagName != "TEXTAREA" && e.code == "Space") {
                     e.preventDefault();
                     if (this.media) {
