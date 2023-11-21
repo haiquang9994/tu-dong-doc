@@ -218,6 +218,18 @@
                     }
                 }
             })
+            window.addEventListener('keyup', () => {
+                if (e.target.tagName != "TEXTAREA" && e.code == "Space") {
+                    e.preventDefault();
+                    if (this.media) {
+                        if (this.media.paused) {
+                            this.media.play();
+                        } else {
+                            this.media.pause();
+                        }
+                    }
+                }
+            })
         }
         this.add_event_next = (ele) => {
             ele.addEventListener('click', () => {
