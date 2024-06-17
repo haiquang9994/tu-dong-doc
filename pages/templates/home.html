@@ -65,6 +65,7 @@
         this.loading = false;
         this.outputEl = null;
         this.queueEl = null;
+        this.loading_text = null;
 
         this.run = () => {
             if (params) {
@@ -93,16 +94,24 @@
                 if (this.base64_items.length < 3) {
                     if (this.has() && !this.loading) {
                         let text = this.shift_queue();
+                        this.render_queue();
                         if (text?.match(/[a-zA-Z0-9]+/)) {
+                            this.loading_text = text;
                             this.save_queue_texts(text);
+                            this.render_queue();
                             this.loading = true;
                             this.text_to_speech(text)
                                 .then(res => {
                                     this.base64_items.push(res);
                                     this.loading = false;
+                                    this.loading_text = null;
+                                    this.render_queue();
                                     this.render_base64_items();
                                     this.save_base64_items();
                                     this.save_queue_texts();
+                                })
+                                .catch(() => {
+                                    this.loading_text = null;
                                 })
                         }
                     }
@@ -134,6 +143,10 @@
             if (this.queueEl) {
                 let queues = this.queue_texts;
                 let texts = [];
+                if (this.loading_text) {
+                    const _text = typeof this.loading_text === 'string' ? this.loading_text.trim() : "";
+                    texts.push('<p style="color: #cacaca;">' + _text + '</p>');
+                }
                 queues.forEach(text => {
                     const _text = typeof text === 'string' ? text.trim() : "";
                     texts.push('<p>' + _text + '</p>');
@@ -148,7 +161,6 @@
         }
         this.shift_queue = () => {
             let text = this.queue_texts.shift();
-            this.render_queue();
             this.save_queue_texts();
             return text;
         }
